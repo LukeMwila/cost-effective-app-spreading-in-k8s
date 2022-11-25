@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-test
+  template:
+    metadata:
+      labels:
+        app: express-test
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - express-test
+            topologyKey: "topology.kubernetes.io/zone"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: managedBy
+                operator: In
+                values:
+                - karpenter
+              - key: provisioner
+                operator: In
+                values:
+                - express-test
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: express-test
+          image: lukondefmwila/express-test:latest
+          resources:
+            requests:
+              cpu: "1"
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-test-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-test
+  template:
+    metadata:
+      labels:
+        app: express-test
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: managedBy
+                operator: In
+                values:
+                - karpenter
+              - key: provisioner
+                operator: In
+                values:
+                - express-test
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: express-test
+          image: lukondefmwila/express-test:1.1.4
+          resources:
+            requests:
+              cpu: "1"

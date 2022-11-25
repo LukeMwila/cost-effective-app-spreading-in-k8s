@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: express-test-dr
+spec:
+  host: express-test.default.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:                        
+      localityLbSetting:
+        distribute:
+        - from: eu-west-1/*    
+          to:
+            "eu-west-1/eu-west-1a/*": 70 
+            "eu-west-1/eu-west-1c/*": 30
+    connectionPool:
+      http:
+        http2MaxRequests: 10
+        maxRequestsPerConnection: 10
+    outlierDetection:
+      consecutiveGatewayErrors: 1
+      interval: 1m
+      baseEjectionTime: 30s
