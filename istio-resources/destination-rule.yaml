@@ -8,10 +8,11 @@ spec:
     loadBalancer:                        
       localityLbSetting:
         distribute:
-        - from: eu-west-1/*    
+        - from: eu-west-1/eu-west-1a/*    
           to:
             "eu-west-1/eu-west-1a/*": 70 
-            "eu-west-1/eu-west-1c/*": 30
+            "eu-west-1/eu-west-1b/*": 20
+            "eu-west-1/eu-west-1c/*": 10
     connectionPool:
       http:
         http2MaxRequests: 10
