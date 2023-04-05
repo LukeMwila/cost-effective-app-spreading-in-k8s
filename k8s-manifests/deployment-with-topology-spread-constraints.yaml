@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-test
+  template:
+    metadata:
+      labels:
+        app: express-test
+        tier: backend
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "topology.kubernetes.io/zone"
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: express-test
+      nodeSelector:
+        karpenter.sh/provisioner-name: express-test
+      containers:
+        - name: express-test
+          image: public.ecr.aws/k3d0y0m9/express-test:1.1.2
+          resources:
+            requests:
+              cpu: "1"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-test-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-test
+  template:
+    metadata:
+      labels:
+        app: express-test
+        tier: backend
+    spec:
+      nodeSelector:
+        karpenter.sh/provisioner-name: express-test
+      containers:
+        - name: express-test
+          image: public.ecr.aws/k3d0y0m9/express-test:1.1.4
+          resources:
+            requests:
+              cpu: "1"

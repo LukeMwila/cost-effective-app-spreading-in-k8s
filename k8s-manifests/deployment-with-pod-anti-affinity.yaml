@@ -37,7 +37,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: express-test
-          image: lukondefmwila/express-test:latest
+          image: public.ecr.aws/k3d0y0m9/express-test:latest
           resources:
             requests:
               cpu: "1"
@@ -72,7 +72,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: express-test
-          image: lukondefmwila/express-test:1.1.4
+          image: public.ecr.aws/k3d0y0m9/express-test:1.1.4
           resources:
             requests:
               cpu: "1"
